@@ -1,3 +1,6 @@
+-- =============================================
+--                 CREATE DATABASE
+-- =============================================
 USE MASTER
 IF EXISTS
 (
@@ -15,7 +18,9 @@ GO
 USE comercioDB
 GO
 
-/*Users*/
+-- =============================================
+--                   USERS
+-- =============================================
 IF EXISTS
 (
     SELECT *
@@ -37,7 +42,9 @@ GO
 CREATE USER usuario1 FOR LOGIN usuario1
 GO
 
-/*Schemas*/
+-- =============================================
+--                    SCHEMAS
+-- =============================================
 IF EXISTS 
 (
     SELECT name
@@ -71,14 +78,143 @@ GO
 CREATE SCHEMA Opiniones AUTHORIZATION usuario1
 GO
 
-/*DataType*/
-
-IF EXISTS
+-- =============================================
+--                CREATE TABLES
+-- =============================================
+IF EXISTS 
 (
-    SELECT *
-    FROM SYS.TYPES
-    WHERE NAME = 'ID_TIPO'
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='ventas' AND T.NAME = 'clientes'
 )
-DROP TYPE ID_TIPO
+DROP TABLE ventas.clientes
 GO
-CREATE TYPE ID_TIPO FROM SMELL NOT NULL
+CREATE TABLE ventas.clientes
+(
+    id INT PRIMARY KEY NOT NULL,
+    nombres NVARCHAR(50) NOT NULL,
+    apellidos   NVARCHAR(50)NOT NULL,    
+    correo VARCHAR(50) UNIQUE,
+    direccion VARCHAR(255),
+    telefono VARCHAR(15)
+)
+GO  
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='ventas' AND T.NAME = 'detalles_pedido'
+)
+DROP TABLE ventas.detalles_pedido
+GO
+CREATE TABLE ventas.detalles_pedido
+(
+    id int PRIMARY KEY NOT NULL,
+    id_pedido INT,
+    id_producto INT,
+    cantidad int,
+    precio_unitario DECIMAL(10,2)
+)
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='ventas' AND T.NAME = 'pedidos'
+)
+DROP TABLE ventas.pedidos
+GO
+CREATE TABLE ventas.pedidos
+(
+    id int PRIMARY KEY NOT NULL,
+    id_cliente INT,
+    fecha DATATIME2,
+    estado  VARCHAR(20) DEFAULT 'Pendiente',
+    total DECIMAL(10,2)
+)
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='ventas' AND T.NAME = 'pagos'
+)
+DROP TABLE ventas.pagos
+GO
+CREATE TABLE ventas.pagos
+(
+    id int PRIMARY KEY NOT NULL,
+    id_pedido INT,
+    monto decimal(10.2),
+    metodo VARCHAR(15)
+    estado VARCHAR(15) DEFAULT 'Pendiente'
+)
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='inventario' AND T.NAME = 'productos'
+)
+DROP TABLE inventario.productos
+GO
+CREATE TABLE inventario.productos
+(
+    id int PRIMARY KEY NOT NULL,
+    nombre VARCHAR(50),
+    descripcion varchar(255),
+    precio DECIMAL(10.2),
+    stock   INT,
+    id_categoria INT
+)
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='inventario' AND T.NAME = 'categorias'
+)
+DROP TABLE inventario.categorias
+GO
+CREATE TABLE inventario.categorias
+(
+    id int PRIMARY KEY NOT NULL,
+    nombre VARCHAR(50),
+    descripcion varchar(255),
+)
+
+
+IF EXISTS 
+(
+        SELECT *
+        FROM SYS.SCHEMAS S 
+        INNER JOIN SYS.TABLES T 
+        ON T.SCHEMA_ID = S.SCHEMA_ID
+        WHERE S.NAME ='opiniones' AND T.NAME = 'reseña'
+)
+DROP TABLE opiniones.reseña
+GO
+CREATE TABLE opiniones.reseña
+(
+    id int PRIMARY KEY NOT NULL,
+    id_cliente INT,
+    id_producto INT,
+    calificacion tinyint,
+    comentario varchar(255)
+    fecha DATATIME2 
+)
+
+
