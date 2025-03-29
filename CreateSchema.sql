@@ -97,8 +97,8 @@ CREATE TABLE ventas.clientes
     nombres NVARCHAR(50) NOT NULL,
     apellidos   NVARCHAR(50)NOT NULL,    
     correo VARCHAR(50) UNIQUE,
-    direccion VARCHAR(255),
-    telefono VARCHAR(15)
+    direccion VARCHAR(255) NOT NULL,
+    telefono VARCHAR(15) NOT NULL
 )
 GO  
 
@@ -115,10 +115,10 @@ GO
 CREATE TABLE ventas.detalles_pedido
 (
     id int PRIMARY KEY NOT NULL,
-    id_pedido INT,
-    id_producto INT,
-    cantidad int,
-    precio_unitario DECIMAL(10,2)
+    id_pedido INT NOT NULL,
+    id_producto INT NOT NULL,
+    cantidad int NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL
 )
 
 IF EXISTS 
@@ -134,10 +134,10 @@ GO
 CREATE TABLE ventas.pedidos
 (
     id int PRIMARY KEY NOT NULL,
-    id_cliente INT,
-    fecha DATATIME2,
+    id_cliente INT NOT NULL,
+    fecha DATATIME2  NOT NULL,
     estado  VARCHAR(20) DEFAULT 'Pendiente',
-    total DECIMAL(10,2)
+    total DECIMAL(10,2)  NOT NULL
 )
 
 IF EXISTS 
@@ -153,9 +153,9 @@ GO
 CREATE TABLE ventas.pagos
 (
     id int PRIMARY KEY NOT NULL,
-    id_pedido INT,
-    monto decimal(10.2),
-    metodo VARCHAR(15)
+    id_pedido INT  NOT NULL,
+    monto decimal(10.2)  NOT NULL,
+    metodo VARCHAR(15)  NOT NULL
     estado VARCHAR(15) DEFAULT 'Pendiente'
 )
 
@@ -172,11 +172,11 @@ GO
 CREATE TABLE inventario.productos
 (
     id int PRIMARY KEY NOT NULL,
-    nombre VARCHAR(50),
-    descripcion varchar(255),
-    precio DECIMAL(10.2),
-    stock   INT,
-    id_categoria INT
+    nombre VARCHAR(50)  NOT NULL,
+    descripcion varchar(255) ,
+    precio DECIMAL(10.2)  NOT NULL,
+    stock   INT  NOT NULL,
+    id_categoria INT  NOT NULL
 )
 
 IF EXISTS 
@@ -192,8 +192,8 @@ GO
 CREATE TABLE inventario.categorias
 (
     id int PRIMARY KEY NOT NULL,
-    nombre VARCHAR(50),
-    descripcion varchar(255),
+    nombre VARCHAR(50)  NOT NULL,
+    descripcion varchar(255) ,
 )
 
 
@@ -210,11 +210,11 @@ GO
 CREATE TABLE opiniones.reseña
 (
     id int PRIMARY KEY NOT NULL,
-    id_cliente INT,
-    id_producto INT,
+    id_cliente INT  NOT NULL,
+    id_producto INT  NOT NULL,
     calificacion tinyint,
-    comentario varchar(255)
-    fecha DATATIME2 
+    comentario varchar(255),
+    fecha DATATIME2  NOT NULL
 )
 
 
