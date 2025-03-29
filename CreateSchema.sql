@@ -120,6 +120,7 @@ CREATE TABLE ventas.detalles_pedido
     cantidad int NOT NULL,
     precio_unitario DECIMAL(10,2) NOT NULL
 )
+GO
 
 IF EXISTS 
 (
@@ -135,10 +136,11 @@ CREATE TABLE ventas.pedidos
 (
     id int PRIMARY KEY NOT NULL,
     id_cliente INT NOT NULL,
-    fecha DATATIME2  NOT NULL,
+    fecha DATETIME2  NOT NULL,
     estado  VARCHAR(20) DEFAULT 'Pendiente',
     total DECIMAL(10,2)  NOT NULL
 )
+GO
 
 IF EXISTS 
 (
@@ -154,10 +156,11 @@ CREATE TABLE ventas.pagos
 (
     id int PRIMARY KEY NOT NULL,
     id_pedido INT  NOT NULL,
-    monto decimal(10.2)  NOT NULL,
-    metodo VARCHAR(15)  NOT NULL
+    monto decimal(10,2)  NOT NULL,
+    metodo VARCHAR(15)  NOT NULL,
     estado VARCHAR(15) DEFAULT 'Pendiente'
 )
+GO
 
 IF EXISTS 
 (
@@ -174,10 +177,11 @@ CREATE TABLE inventario.productos
     id int PRIMARY KEY NOT NULL,
     nombre VARCHAR(50)  NOT NULL,
     descripcion varchar(255) ,
-    precio DECIMAL(10.2)  NOT NULL,
+    precio DECIMAL(10,2)  NOT NULL,
     stock   INT  NOT NULL,
     id_categoria INT  NOT NULL
 )
+GO
 
 IF EXISTS 
 (
@@ -195,7 +199,7 @@ CREATE TABLE inventario.categorias
     nombre VARCHAR(50)  NOT NULL,
     descripcion varchar(255) ,
 )
-
+GO
 
 IF EXISTS 
 (
@@ -214,7 +218,21 @@ CREATE TABLE opiniones.reseña
     id_producto INT  NOT NULL,
     calificacion tinyint,
     comentario varchar(255),
-    fecha DATATIME2  NOT NULL
+    fecha DATETIME2  NOT NULL
 )
+GO
 
+ALTER TABLE ventas.pedidos 
+ADD CONSTRAINT FK_pedidos.clientes FOREIGN KEY (id_cliente) REFERENCES ventas.clientes(id)
+ON DELETE CASCADE 
+GO
 
+ALTER TABLE ventas.detalles_pedido 
+ADD CONSTRAINT FK_detalles_pedido_pedidos FOREIGN KEY (id_pedido) REFERENCES ventas.pedidos(id)
+ON DELETE CASCADE
+GO
+
+ALTER TABLE ventas.detalles_pedido
+ADD CONSTRAINT FK_detalles_pedido_productos FOREIGN KEY (id_producto) REFERENCES inventario.productos(id)
+ON DELETE CASCADE
+GO
