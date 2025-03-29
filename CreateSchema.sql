@@ -209,9 +209,9 @@ IF EXISTS
         ON T.SCHEMA_ID = S.SCHEMA_ID
         WHERE S.NAME ='opiniones' AND T.NAME = 'reseña'
 )
-DROP TABLE opiniones.reseña
+DROP TABLE opiniones.reseñas
 GO
-CREATE TABLE opiniones.reseña
+CREATE TABLE opiniones.reseñas
 (
     id int PRIMARY KEY NOT NULL,
     id_cliente INT  NOT NULL,
@@ -236,3 +236,24 @@ ALTER TABLE ventas.detalles_pedido
 ADD CONSTRAINT FK_detalles_pedido_productos FOREIGN KEY (id_producto) REFERENCES inventario.productos(id)
 ON DELETE CASCADE
 GO
+
+ALTER TABLE inventario.productos
+ADD CONSTRAINT FK_productos_categorias FOREIGN KEY (id_categoria) REFERENCES Inventario.categorias(id)
+ON DELETE CASCADE
+GO
+
+ALTER TABLE ventas.pagos
+ADD CONSTRAINT FK_pagos_pedidos FOREIGN KEY(id_pedido) REFERENCES ventas.pedidos(id)
+ON DELETE CASCADE
+GO
+
+ALTER TABLE opiniones.reseñas
+ADD CONSTRAINT FK_reseña_clientes FOREIGN KEY(id_cliente) REFERENCES ventas.clientes(id)
+ON DELETE CASCADE
+GO
+
+ALTER TABLE opiniones.reseñas
+ADD CONSTRAINT FK_reseña_productos FOREIGN KEY (id_producto) REFERENCES inventario.productos(id)
+ON DELETE CASCADE
+GO 
+
